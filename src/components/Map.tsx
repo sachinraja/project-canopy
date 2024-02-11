@@ -1,8 +1,9 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Map as MapLibre } from 'maplibre-gl'
 import { ParkingLot } from '@/lib/types'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import { LoadingSpinner } from './LoadingSpinner'
 
 export interface MapProps {
   onFeatureChange?: (parkingLot: ParkingLot) => void
@@ -11,6 +12,7 @@ export interface MapProps {
 export function Map(props: MapProps) {
   const mapRef = useRef<HTMLDivElement>(null)
   const currentClickedFeatureId = useRef<string | number | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const map = new MapLibre({
@@ -71,9 +73,20 @@ export function Map(props: MapProps) {
         .on('mouseout', 'parking-lots', () => {
           map.getCanvas().style.cursor = ''
         })
+        .once('idle', () => setIsLoading(false))
     })
     return () => map.remove()
   }, [props.onFeatureChange])
 
-  return <div style={{ height: 500, width: 500 }} ref={mapRef} />
+  return (
+    <div className="flex flex-col space-y-2">
+      <div className="w-[500px] h-[500px]" ref={mapRef} />
+      {isLoading && (
+        <div className="flex flex-row space-x-2 items-center">
+          <LoadingSpinner />
+          <p>loading parking lots... (this will take a few seconds)</p>
+        </div>
+      )}
+    </div>
+  )
 }

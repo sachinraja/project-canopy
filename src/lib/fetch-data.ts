@@ -1,6 +1,7 @@
 'use server'
+import { unstable_cache } from 'next/cache'
 
-export async function getSolarIrradiance(options: {
+async function fetchEnergyProduction(options: {
   lat: number
   lon: number
   peakPower: number
@@ -33,3 +34,7 @@ export async function getSolarIrradiance(options: {
 
   return res.json()
 }
+
+export const getEnergyProduction = unstable_cache(fetchEnergyProduction, [
+  'energy-production',
+])

@@ -1,16 +1,17 @@
 import { formatNumber } from '@/lib/format'
-import { getSolarIrradiance } from '@/lib/solar-irradiance'
+import { getEnergyProduction } from '@/lib/fetch-data'
 import { ParkingLot } from '@/lib/types'
 import { useEffect, useState } from 'react'
 
 export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
   const { parkingLot } = props
 
-  const [annualSolarIrradiance, setAnnualSolarIrradiance] = useState<number>(0)
-  const [isSolarIrradianceLoading, setIsSolarIrradianceLoading] = useState(true)
+  const [annualEnergyProduction, setAnnualEnergyProduction] =
+    useState<number>(0)
+  const [isDataLoading, setIsDataLoading] = useState(true)
   useEffect(() => {
-    setIsSolarIrradianceLoading(true)
-    getSolarIrradiance({
+    setIsDataLoading(true)
+    getEnergyProduction({
       lat: parkingLot.lngLat.lat,
       lon: parkingLot.lngLat.lng,
       // 20% efficiency
@@ -19,9 +20,8 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
       loss: 2,
       tiltAngle: 0,
     }).then((res) => {
-      console.log(res)
-      setAnnualSolarIrradiance(res.outputs.totals.fixed['E_y'])
-      setIsSolarIrradianceLoading(false)
+      setAnnualEnergyProduction(res.outputs.totals.fixed['E_y'])
+      setIsDataLoading(false)
     })
   }, [parkingLot])
 
@@ -31,14 +31,12 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
         <div>
           <h2 className="font-semibold">Annual Energy Production</h2>
           <p>
-            {isSolarIrradianceLoading
-              ? '...'
-              : formatNumber(annualSolarIrradiance)}{' '}
+            {isDataLoading ? '...' : formatNumber(annualEnergyProduction)}{' '}
             kWh/yr
             <br />
-            {isSolarIrradianceLoading
+            {isDataLoading
               ? '...'
-              : formatNumber(annualSolarIrradiance / parkingLot.area)}{' '}
+              : formatNumber(annualEnergyProduction / parkingLot.area)}{' '}
             kWh/m²/yr
           </p>
         </div>
@@ -49,7 +47,7 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
         <div>
           <h2 className="font-semibold">Assumptions</h2>
           <p>
-            Efficiency: 20%
+            Conversion Efficiency: 20%
             <br />
             Loss: 2%
           </p>
