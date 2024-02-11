@@ -7,7 +7,7 @@
     "build": "pnpm download-geojson && next build",
     "start": "next start",
     "lint": "next lint",
-    "download-geojson": "curl \"https://opendata.arcgis.com/api/v3/datasets/413ba9befacf41a68f7dcad55a08f9a8_0/downloads/data?format=geojson&spatialRefId=4326&where=1%3D1\" > public/parking-lots.geojson"
+    "download-geojson": "curl https://opendata.arcgis.com/api/v3/datasets/413ba9befacf41a68f7dcad55a08f9a8_0/downloads/data\\?format\\=geojson\\&spatialRefId\\=4326\\&where\\=1%3D1 > public/parking-lots.geojson"
   },
   "dependencies": {
     "maplibre-gl": "^4.0.0",
