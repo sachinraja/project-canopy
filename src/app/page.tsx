@@ -1,9 +1,10 @@
+import { GitHubIcon } from '@/components/GitHubIcon'
 import { MapContainer } from '@/components/MapContainer'
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-8">
         <div>
           <h1 className="text-2xl">
             <span className="font-semibold">Project Canopy</span> - estimated
@@ -27,6 +28,14 @@ export default function Home() {
           </p>
         </div>
         <MapContainer />
+
+        <a
+          className="flex flex-row space-x-2"
+          href="https://github.com/sachinraja/project-canopy"
+        >
+          <GitHubIcon />
+          <p>view source code on GitHub</p>
+        </a>
       </div>
     </main>
   )
