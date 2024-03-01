@@ -1,7 +1,12 @@
-import { formatNumber } from '@/lib/format'
+import { formatMoney, formatNumber } from '@/lib/format'
 import { getEnergyProduction } from '@/lib/fetch-data'
 import { ParkingLot } from '@/lib/types'
 import { useEffect, useState } from 'react'
+import {
+  CONVERSION_EFFICIENCY,
+  TRANSMISSION_LOSS,
+  getSystemCost,
+} from '@/lib/calculate'
 
 export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
   const { parkingLot } = props
@@ -9,13 +14,14 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
   const [annualEnergyProduction, setAnnualEnergyProduction] =
     useState<number>(0)
   const [isDataLoading, setIsDataLoading] = useState(true)
+  const peakPower = parkingLot.area * CONVERSION_EFFICIENCY
   useEffect(() => {
     setIsDataLoading(true)
     getEnergyProduction({
       lat: parkingLot.lngLat.lat,
       lon: parkingLot.lngLat.lng,
       // 20% efficiency
-      peakPower: props.parkingLot.area * 0.2,
+      peakPower,
       // 2% loss
       loss: 2,
       tiltAngle: 0,
@@ -38,6 +44,15 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
               ? '...'
               : formatNumber(annualEnergyProduction / parkingLot.area)}{' '}
             kWh/m²/yr
+            <br />
+          </p>
+        </div>
+        <div>
+          <h2 className="font-semibold">Price</h2>
+          <p>
+            Peak Power: {formatNumber(peakPower)} kW
+            <br />
+            System Cost: {formatMoney(getSystemCost(peakPower))}
           </p>
         </div>
         <div>
@@ -47,9 +62,9 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
         <div>
           <h2 className="font-semibold">Assumptions</h2>
           <p>
-            Conversion Efficiency: 20%
+            Conversion Efficiency: {CONVERSION_EFFICIENCY * 100}%
             <br />
-            Loss: 2%
+            Transmission Loss: {TRANSMISSION_LOSS * 100}%
           </p>
         </div>
       </div>
