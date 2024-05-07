@@ -10,10 +10,18 @@
     "download-geojson": "curl https://opendata.arcgis.com/api/v3/datasets/413ba9befacf41a68f7dcad55a08f9a8_0/downloads/data\\?format\\=geojson\\&spatialRefId\\=4326\\&where\\=1%3D1 > public/parking-lots.geojson"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-select": "^2.0.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "jotai": "^2.7.0",
+    "lucide-react": "^0.344.0",
     "maplibre-gl": "^4.0.0",
     "next": "14.1.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/node": "^20",

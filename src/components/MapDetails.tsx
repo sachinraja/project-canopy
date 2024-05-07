@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 import {
   CONVERSION_EFFICIENCY,
   TRANSMISSION_LOSS,
+  getPeakPower,
+  getSavings,
   getSystemCost,
 } from '@/lib/calculate'
 
@@ -14,7 +16,8 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
   const [annualEnergyProduction, setAnnualEnergyProduction] =
     useState<number>(0)
   const [isDataLoading, setIsDataLoading] = useState(true)
-  const peakPower = parkingLot.area * CONVERSION_EFFICIENCY
+  const peakPower = getPeakPower(parkingLot.area)
+  const annualKilowattsPerSquareMeter = annualEnergyProduction / parkingLot.area
   useEffect(() => {
     setIsDataLoading(true)
     getEnergyProduction({
@@ -23,9 +26,9 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
       // 20% efficiency
       peakPower,
       // 2% loss
-      loss: 2,
-      tiltAngle: 0,
+      loss: 14,
     }).then((res) => {
+      console.log(JSON.stringify(res))
       setAnnualEnergyProduction(res.outputs.totals.fixed['E_y'])
       setIsDataLoading(false)
     })
@@ -42,7 +45,7 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
             <br />
             {isDataLoading
               ? '...'
-              : formatNumber(annualEnergyProduction / parkingLot.area)}{' '}
+              : formatNumber(annualKilowattsPerSquareMeter)}{' '}
             kWh/m²/yr
             <br />
           </p>
@@ -53,6 +56,16 @@ export function ParkingLotDetails(props: { parkingLot: ParkingLot }) {
             Peak Power: {formatNumber(peakPower)} kW
             <br />
             System Cost: {formatMoney(getSystemCost(peakPower))}
+            <br />
+            Savings:{' '}
+            {isDataLoading
+              ? '...'
+              : formatMoney(
+                  getSavings({
+                    area: parkingLot.area,
+                    annualKilowattsPerSquareMeter,
+                  }),
+                )}
           </p>
         </div>
         <div>

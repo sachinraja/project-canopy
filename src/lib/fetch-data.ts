@@ -6,7 +6,6 @@ async function fetchEnergyProduction(options: {
   lon: number
   peakPower: number
   loss: number
-  tiltAngle: number
 }): Promise<{
   outputs: {
     totals: {
@@ -23,9 +22,9 @@ async function fetchEnergyProduction(options: {
     lon: options.lon.toString(),
     peakpower: options.peakPower.toString(),
     loss: options.loss.toString(),
-    angle: options.tiltAngle.toString(),
     mountingplace: 'building',
     outputformat: 'json',
+    optimalangles: '1',
   })
 
   const res = await fetch(

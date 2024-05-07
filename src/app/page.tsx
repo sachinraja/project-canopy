@@ -1,5 +1,6 @@
 import { GitHubIcon } from '@/components/GitHubIcon'
 import { MapContainer } from '@/components/MapContainer'
+import { PricingModelSelect } from '@/components/PricingDropdown'
 
 export default function Home() {
   return (
@@ -27,6 +28,11 @@ export default function Home() {
             </a>
           </p>
         </div>
+        <div className="flex flex-col space-y-4">
+          <h2>Pricing Model</h2>
+          <PricingModelSelect />
+        </div>
+
         <MapContainer />
 
         <a

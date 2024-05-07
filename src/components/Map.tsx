@@ -2,8 +2,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { Map as MapLibre } from 'maplibre-gl'
 import { ParkingLot } from '@/lib/types'
-import 'maplibre-gl/dist/maplibre-gl.css'
 import { LoadingSpinner } from './LoadingSpinner'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import { ftSquaredToMetersSquared } from '@/lib/utils'
 
 export interface MapProps {
   onFeatureChange?: (parkingLot: ParkingLot) => void
@@ -63,8 +64,7 @@ export function Map(props: MapProps) {
           props.onFeatureChange?.({
             id: AIN,
             lngLat: e.lngLat,
-            // convert from ft² to m²
-            area: Shape_STAr * 0.092903,
+            area: ftSquaredToMetersSquared(Shape_STAr),
           })
         })
         .on('mouseover', 'parking-lots', () => {
